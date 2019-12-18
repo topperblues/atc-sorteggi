@@ -55,25 +55,47 @@ class Atc_Drawing_Admin
     }
 
     /**
+     * Register the menu for the admin area.
+     *
+     * @since    1.0.0
+     */
+    public function add_menu()
+    {
+        add_menu_page(
+            'Ambito Territoriale di Caccia',
+            'ATC Drawing',
+            'manage_options',
+            'atc-plugin',
+            plugin_dir_url(__FILE__) . 'partials/atc-drawing-admin-start.php',
+            plugin_dir_url(__FILE__) . 'images/icon.png'
+        );
+        add_submenu_page(
+            'atc-plugin',
+            'Aggiungi cacciatore',
+            'Aggiungi cacciatore',
+            'manage_options',
+            'atc-plugin-hunter-add',
+            plugin_dir_url(__FILE__) . 'partials/atc-drawing-admin-hunter-add.php',
+            1
+        );
+        add_submenu_page(
+            'atc-plugin',
+            'Lista cacciatori',
+            'Lista cacciatori',
+            'manage_options',
+            'atc-plugin-hunters-list',
+            plugin_dir_url(__FILE__) . 'partials/atc-drawing-admin-hunter-list.php',
+            2
+        );
+    }
+
+    /**
      * Register the stylesheets for the admin area.
      *
      * @since    1.0.0
      */
     public function enqueue_styles()
     {
-
-        /**
-         * This function is provided for demonstration purposes only.
-         *
-         * An instance of this class should be passed to the run() function
-         * defined in Plugin_Name_Loader as all of the hooks are defined
-         * in that particular class.
-         *
-         * The Plugin_Name_Loader will then create the relationship
-         * between the defined hooks and the functions defined in this
-         * class.
-         */
-
         wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/atc-drawing-admin.css', array(), $this->version, 'all');
     }
 
@@ -84,19 +106,6 @@ class Atc_Drawing_Admin
      */
     public function enqueue_scripts()
     {
-
-        /**
-         * This function is provided for demonstration purposes only.
-         *
-         * An instance of this class should be passed to the run() function
-         * defined in Plugin_Name_Loader as all of the hooks are defined
-         * in that particular class.
-         *
-         * The Plugin_Name_Loader will then create the relationship
-         * between the defined hooks and the functions defined in this
-         * class.
-         */
-
         wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/atc-drawing-admin.js', array( 'jquery' ), $this->version, false);
     }
 }
