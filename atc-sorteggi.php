@@ -23,6 +23,7 @@ if (!defined('ATC_URL')) {
     define('ATC_URL', plugins_url('', __FILE__));
 }
 
+// START - Plugin installation
 
 function create_anagrafica_table()
 {
@@ -66,50 +67,102 @@ function atc_deactivation()
 }
 register_deactivation_hook(__FILE__, 'atc_deactivation');
 
-//Create a function called "wporg_init" if it doesn't already exist
-if (!function_exists('wporg_init')) {
-    function wporg_init()
-    {
-        register_setting('wporg_settings', 'wporg_option_foo');
-    }
-}
+// END - Plugin installation
 
-if (!class_exists('WPOrg_Plugin')) {
-    class WPOrg_Plugin
-    {
-        public static function init()
-        {
-            register_setting('wporg_settings', 'wporg_option_foo');
-        }
- 
-        public static function get_foo()
-        {
-            return get_option('wporg_option_foo');
-        }
-    }
- 
-    WPOrg_Plugin::init();
-    WPOrg_Plugin::get_foo();
-}
+class ATC_Plugin
+{
 
-if (is_admin()) {
-    // we are in admin mode
-    function ATC_add_front_page()
+    // class instance
+    public static $instance;
+
+    // customer WP_List_Table object
+    public $customers_obj;
+
+    // class constructor
+    public function __construct()
     {
-        include_once('atc-add_anagrafica.php');
+        add_filter('set-screen-option', [ __CLASS__, 'set_screen' ], 10, 3);
+        add_action('admin_menu', [ $this, 'plugin_menu' ]);
     }
 
-    add_action('admin_menu', 'atc_menu');
- 
-    function atc_menu()
+
+    public static function set_screen($status, $option, $value)
     {
-        add_menu_page(
+        return $value;
+    }
+
+    public function plugin_menu()
+    {
+        $hook = add_menu_page(
             'Ambito Territoriale di Caccia',
             'ATC',
             'manage_options',
             'atc-plugin',
-            'ATC_add_front_page',
+            [ $this, 'plugin_start_page' ],
             ATC_URL.'/assets/images/icon.png'
         );
+        add_action("load-$hook", [ $this, 'screen_option' ]);
+        $hook = add_submenu_page(
+            'atc-plugin',
+            'Aggiungi cacciatore',
+            'Aggiungi cacciatore',
+            'manage_options',
+            'atc-plugin-hunter-add',
+            include_once('atc-hunter_add.php'),
+            1
+        );
+        add_action("load-$hook", [ $this, 'screen_option' ]);
+        $hook = add_submenu_page(
+            'atc-plugin',
+            'Lista cacciatori',
+            'Lista cacciatori',
+            'manage_options',
+            'atc-plugin-hunters-list',
+            include_once('atc-hunters_list.php'),
+            1
+        );
+        add_action("load-$hook", [ $this, 'screen_option' ]);
+    }
+
+
+    /**
+     * Plugin pages
+     */
+    public function plugin_start_page()
+    {
+        include_once('atc-start_page.php');
+    }
+
+    /**
+     * Screen options
+     */
+    public function screen_option()
+    {
+        $option = 'per_page';
+        $args   = [
+            'label'   => 'Cacciatori',
+            'default' => 5,
+            'option'  => 'hunters_per_page'
+        ];
+
+        add_screen_option($option, $args);
+
+        $this->hunters_obj = new Hunters_List();
+    }
+
+
+    /** Singleton instance */
+    public static function get_instance()
+    {
+        if (! isset(self::$instance)) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
     }
 }
+
+
+add_action('plugins_loaded', function () {
+    ATC_Plugin::get_instance();
+});
