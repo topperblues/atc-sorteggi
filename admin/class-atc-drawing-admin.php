@@ -121,7 +121,7 @@ class Atc_Drawing_Admin
         );
 
         add_submenu_page(
-            'atc-plugin',
+            $this->plugin_name,
             'Ambito Territoriale di Caccia',
             'Home',
             $this->capability,
@@ -131,7 +131,7 @@ class Atc_Drawing_Admin
         );
 
         add_submenu_page(
-            'atc-plugin',
+            $this->plugin_name,
             'Ambito Territoriale di Caccia',
             'Aggiungi cacciatore',
             $this->capability,
@@ -141,7 +141,7 @@ class Atc_Drawing_Admin
         );
 
         add_submenu_page(
-            'atc-plugin',
+            $this->plugin_name,
             'Ambito Territoriale di Caccia',
             'Lista cacciatori',
             $this->capability,
