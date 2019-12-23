@@ -42,6 +42,15 @@ class Atc_Drawing_Admin
     private $version;
 
     /**
+     * The user capability needed to use this plugin.
+     *
+     * @since    1.0.0
+     * @access   private
+     * @var      string    $capability    The user capability needed to use this plugin.
+     */
+    private $capability;
+
+    /**
      * Initialize the class and set its properties.
      *
      * @since    1.0.0
@@ -52,6 +61,47 @@ class Atc_Drawing_Admin
     {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
+        $this->capability = 'manage_options';
+    }
+
+    /**
+     * Add the WPHost Welcome Panel
+     *
+     * @since 1.0.0
+     */
+    public function welcome_page($page)
+    {
+        include(plugin_dir_path(__FILE__) . 'partials/atc-drawing-admin-welcome.php');
+    }
+
+    /**
+     * Add the WPHost Welcome Panel
+     *
+     * @since 1.0.0
+     */
+    public function add_hunter_page($page)
+    {
+        include(plugin_dir_path(__FILE__) . 'partials/atc-drawing-admin-hunter-add.php');
+    }
+
+    /**
+     * Add the WPHost Welcome Panel
+     *
+     * @since 1.0.0
+     */
+    public function list_hunter_page($page)
+    {
+        include(plugin_dir_path(__FILE__) . 'partials/atc-drawing-admin-hunter-list.php');
+    }
+
+    /**
+     * Add the WPHost Welcome Panel
+     *
+     * @since 1.0.0
+     */
+    public function get_admin_page($page)
+    {
+        include(plugin_dir_path(__FILE__) . 'partials/atc-drawing-admin-welcome.php');
     }
 
     /**
@@ -64,28 +114,40 @@ class Atc_Drawing_Admin
         add_menu_page(
             'Ambito Territoriale di Caccia',
             'ATC Drawing',
-            'manage_options',
-            'atc-plugin',
-            plugin_dir_url(__FILE__) . 'partials/atc-drawing-admin-start.php',
+            $this->capability,
+            $this->plugin_name,
+            array( $this, 'welcome_page' ),
             plugin_dir_url(__FILE__) . 'images/icon.png'
         );
+
         add_submenu_page(
             'atc-plugin',
-            'Aggiungi cacciatore',
-            'Aggiungi cacciatore',
-            'manage_options',
-            'atc-plugin-hunter-add',
-            plugin_dir_url(__FILE__) . 'partials/atc-drawing-admin-hunter-add.php',
+            'Ambito Territoriale di Caccia',
+            'Home',
+            $this->capability,
+            $this->plugin_name . '-welcome',
+            array( $this, 'welcome_page' ),
             1
         );
+
         add_submenu_page(
             'atc-plugin',
-            'Lista cacciatori',
-            'Lista cacciatori',
-            'manage_options',
-            'atc-plugin-hunters-list',
-            plugin_dir_url(__FILE__) . 'partials/atc-drawing-admin-hunter-list.php',
+            'Ambito Territoriale di Caccia',
+            'Aggiungi cacciatore',
+            $this->capability,
+            $this->plugin_name . '-add-hunter',
+            array( $this, 'add_hunter_page' ),
             2
+        );
+
+        add_submenu_page(
+            'atc-plugin',
+            'Ambito Territoriale di Caccia',
+            'Lista cacciatori',
+            $this->capability,
+            $this->plugin_name . '-list-hunter',
+            array( $this, 'list_hunter_page' ),
+            3
         );
     }
 
