@@ -19,7 +19,7 @@
  */
 spl_autoload_register(function ($class_name) {
     // If the specified $class_name does not include our namespace, duck out.
-    if (false === strpos($class_name, 'WP_Plugin_Name')) {
+    if (false === strpos($class_name, 'atcDrawing')) {
         return;
     }
     // Split the class name into an array to read the namespace and class.
