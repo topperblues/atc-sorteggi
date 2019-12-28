@@ -11,6 +11,14 @@
  * @package    atc-drawing
  * @subpackage atc-drawing/admin/partials
  */
+
+namespace atcDrawing\admin;
+
+use atcDrawing as NS;
+use atcDrawing\includes as Includes;
+use atcDrawing\frontend as Frontend;
+
+ $huntersList = new atcDrawing\includes\Hunters_List();
 ?>
 
 <div class="wrap">
@@ -22,8 +30,8 @@
                 <div class="meta-box-sortables ui-sortable">
                     <form method="post">
                         <?php
-                                //$this->customers_obj->prepare_items();
-                                //$this->customers_obj->display();
+                                $huntersList->prepare_items();
+                                $huntersList->display();
                         ?>
                     </form>
                 </div>
@@ -32,4 +40,3 @@
         <br class="clear">
     </div>
 </div>
-<?php

@@ -9,7 +9,7 @@
  * @since      1.0.0
  *
  * @package    atc-drawing
- * @subpackage atc-drawing/public/partials
+ * @subpackage atc-drawing/frontend/partials
  */
 ?>
 

@@ -20,6 +20,13 @@
  * @subpackage atc-drawing/includes
  * @author     Nicola Bonavita <n.bonavita@ereg.it>
  */
+
+namespace atcDrawing\includes;
+
+use atcDrawing as NS;
+use atcDrawing\admin as Admin;
+use atcDrawing\frontend as Frontend;
+
 class Atc_Drawing_Deactivator
 {
 

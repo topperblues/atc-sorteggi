@@ -1,6 +1,55 @@
 <?php
 
-class Cacciatori_List extends WP_List_Table
+namespace atcDrawing\includes;
+
+use atcDrawing as NS;
+use atcDrawing\admin as Admin;
+use atcDrawing\frontend as Frontend;
+
+class Hunters_Table
+{
+    public static function get_table()
+    {
+        global $table_prefix;
+        return $table_prefix . "hunter ";
+    }
+
+    public static function create_table()
+    {
+        global $wpdb;
+
+        $wp_track_table = self::get_table();
+
+        #Check to see if the table exists already, if not, then create it
+
+        if ($wpdb->get_var("show tables like '$wp_track_table'") != $wp_track_table) {
+            $sql = "CREATE TABLE `". $wp_track_table . "` ( ";
+            $sql .= "  `id`  bigint(20) unsigned  NOT NULL auto_increment, ";
+            $sql .= "  `numero`  int(128) unsigned   NOT NULL, ";
+            $sql .= "  `datareg` datetime NOT NULL DEFAULT '0000-00-00 00:00:00', ";
+            $sql .= "  `anno` int(4) unsigned   NOT NULL, ";
+            $sql .= "  `nome` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
+            $sql .= "  `datanas` datetime NOT NULL DEFAULT '0000-00-00 00:00:00', ";
+            $sql .= "  `comunenas` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
+            $sql .= "  `indirizzo` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
+            $sql .= "  PRIMARY KEY `ana_id` (`id`) ";
+            $sql .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ; ";
+            require_once(ABSPATH . '/wp-admin/includes/upgrade.php');
+            dbDelta($sql);
+        }
+    }
+
+    public static function save($data)
+    {
+        global $wpdb;
+
+        $wp_track_table = self::get_table();
+
+        $wpdb->insert($wp_track_table, $data, $format);
+    }
+}
+
+class Hunters_List extends WP_List_Table
 {
 
     /** Class constructor */
@@ -15,18 +64,18 @@ class Cacciatori_List extends WP_List_Table
 
 
     /**
-     * Retrieve customers data from the database
+     * Retrieve hunters data from the database
      *
      * @param int $per_page
      * @param int $page_number
      *
      * @return mixed
      */
-    public static function get_cacciatori($per_page = 5, $page_number = 1)
+    public static function get_hunters($per_page = 5, $page_number = 1)
     {
         global $wpdb;
 
-        $sql = "SELECT * FROM {$wpdb->prefix}customers";
+        $sql = "SELECT * FROM {$huntersTable}";
 
         if (! empty($_REQUEST['orderby'])) {
             $sql .= ' ORDER BY ' . esc_sql($_REQUEST['orderby']);
@@ -44,16 +93,16 @@ class Cacciatori_List extends WP_List_Table
 
 
     /**
-     * Delete a customer record.
+     * Delete a hunter record.
      *
-     * @param int $id customer ID
+     * @param int $id hunter ID
      */
-    public static function delete_cacciatore($id)
+    public static function delete_hunter($id)
     {
         global $wpdb;
 
         $wpdb->delete(
-            "{$wpdb->prefix}customers",
+            "{$huntersTable}",
             [ 'ID' => $id ],
             [ '%d' ]
         );
@@ -69,13 +118,13 @@ class Cacciatori_List extends WP_List_Table
     {
         global $wpdb;
 
-        $sql = "SELECT COUNT(*) FROM {$wpdb->prefix}customers";
+        $sql = "SELECT COUNT(*) FROM {$huntersTable}";
 
         return $wpdb->get_var($sql);
     }
 
 
-    /** Text displayed when no customer data is available */
+    /** Text displayed when no hunter data is available */
     public function no_items()
     {
         _e('Nessun cacciatore disponibile.', 'sp');
@@ -126,12 +175,12 @@ class Cacciatori_List extends WP_List_Table
      */
     public function column_name($item)
     {
-        $delete_nonce = wp_create_nonce('sp_delete_customer');
+        $delete_nonce = wp_create_nonce('sp_delete_hunter');
 
         $title = '<strong>' . $item['name'] . '</strong>';
 
         $actions = [
-            'delete' => sprintf('<a href="?page=%s&action=%s&customer=%s&_wpnonce=%s">Delete</a>', esc_attr($_REQUEST['page']), 'delete', absint($item['ID']), $delete_nonce)
+            'delete' => sprintf('<a href="?page=%s&action=%s&hunter=%s&_wpnonce=%s">Delete</a>', esc_attr($_REQUEST['page']), 'delete', absint($item['ID']), $delete_nonce)
         ];
 
         return $title . $this->row_actions($actions);
@@ -196,7 +245,7 @@ class Cacciatori_List extends WP_List_Table
         /** Process bulk action */
         $this->process_bulk_action();
 
-        $per_page     = $this->get_items_per_page('customers_per_page', 5);
+        $per_page     = $this->get_items_per_page('hunters_per_page', 5);
         $current_page = $this->get_pagenum();
         $total_items  = self::record_count();
 
@@ -205,7 +254,7 @@ class Cacciatori_List extends WP_List_Table
             'per_page'    => $per_page //WE have to determine how many items to show on a page
         ]);
 
-        $this->items = self::get_customers($per_page, $current_page);
+        $this->items = self::get_hunters($per_page, $current_page);
     }
 
     public function process_bulk_action()
@@ -217,10 +266,10 @@ class Cacciatori_List extends WP_List_Table
             // In our file that handles the request, verify the nonce.
             $nonce = esc_attr($_REQUEST['_wpnonce']);
 
-            if (! wp_verify_nonce($nonce, 'sp_delete_customer')) {
+            if (! wp_verify_nonce($nonce, 'sp_delete_hunter')) {
                 die('Go get a life script kiddies');
             } else {
-                self::delete_customer(absint($_GET['customer']));
+                self::delete_hunter(absint($_GET['hunter']));
 
                 // esc_url_raw() is used to prevent converting ampersand in url to "#038;"
                 // add_query_arg() return the current url
@@ -237,7 +286,7 @@ class Cacciatori_List extends WP_List_Table
 
             // loop over the array of record IDs and delete them
             foreach ($delete_ids as $id) {
-                self::delete_customer($id);
+                self::delete_hunter($id);
             }
 
             // esc_url_raw() is used to prevent converting ampersand in url to "#038;"

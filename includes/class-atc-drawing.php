@@ -27,6 +27,13 @@
  * @subpackage atc-drawing/includes
  * @author     Nicola Bonavita <n.bonavita@ereg.it>
  */
+
+namespace atcDrawing\includes;
+
+use atcDrawing as NS;
+use atcDrawing\admin as Admin;
+use atcDrawing\frontend as Frontend;
+
 class Atc_Drawing
 {
 
@@ -69,17 +76,30 @@ class Atc_Drawing
      */
     public function __construct()
     {
-        if (defined('ATC_DRAWING_VERSION')) {
-            $this->version = ATC_DRAWING_VERSION;
+        if (defined('NS\PLUGIN_VERSION')) {
+            $this->version = NS\PLUGIN_VERSION;
         } else {
             $this->version = '1.0.0';
         }
-        $this->plugin_name = 'atc-drawing';
-
+        if (defined('NS\PLUGIN_NAME')) {
+            $this->plugin_name = NS\PLUGIN_NAME;
+        } else {
+            $this->plugin_name = 'atc-drawing';
+        }
+        if (defined('NS\PLUGIN_BASENAME')) {
+            $this->plugin_basename = NS\PLUGIN_BASENAME;
+        } else {
+            $this->plugin_basename = 'atc-drawing';
+        }
+        if (defined('NS\PLUGIN_TEXT_DOMAIN')) {
+            $this->plugin_text_domain = NS\PLUGIN_TEXT_DOMAIN;
+        } else {
+            $this->plugin_text_domain = 'atc-drawing';
+        }
         $this->load_dependencies();
         $this->set_locale();
         $this->define_admin_hooks();
-        $this->define_public_hooks();
+        $this->define_frontend_hooks();
     }
 
     /**
@@ -101,28 +121,28 @@ class Atc_Drawing
     private function load_dependencies()
     {
 
-        /**
-         * The class responsible for orchestrating the actions and filters of the
-         * core plugin.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-atc-drawing-loader.php';
+        // /**
+        //  * The class responsible for orchestrating the actions and filters of the
+        //  * core plugin.
+        //  */
+        // require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-atc-drawing-loader.php';
 
-        /**
-         * The class responsible for defining internationalization functionality
-         * of the plugin.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-atc-drawing-i18n.php';
+        // /**
+        //  * The class responsible for defining internationalization functionality
+        //  * of the plugin.
+        //  */
+        // require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-atc-drawing-i18n.php';
 
-        /**
-         * The class responsible for defining all actions that occur in the admin area.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-atc-drawing-admin.php';
+        // /**
+        //  * The class responsible for defining all actions that occur in the admin area.
+        //  */
+        // require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-atc-drawing-admin.php';
 
-        /**
-         * The class responsible for defining all actions that occur in the public-facing
-         * side of the site.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-atc-drawing-public.php';
+        // /**
+        //  * The class responsible for defining all actions that occur in the public-facing
+        //  * side of the site.
+        //  */
+        // require_once plugin_dir_path(dirname(__FILE__)) . 'frontend/class-atc-drawing-frontend.php';
 
         $this->loader = new Atc_Drawing_Loader();
     }
@@ -152,7 +172,7 @@ class Atc_Drawing
      */
     private function define_admin_hooks()
     {
-        $plugin_admin = new Atc_Drawing_Admin($this->get_plugin_name(), $this->get_version());
+        $plugin_admin = new Admin\Atc_Drawing_Admin($this->get_plugin_name(), $this->get_version());
 
         $this->loader->add_action('admin_menu', $plugin_admin, 'add_menu');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
@@ -166,12 +186,12 @@ class Atc_Drawing
      * @since    1.0.0
      * @access   private
      */
-    private function define_public_hooks()
+    private function define_frontend_hooks()
     {
-        $plugin_public = new Atc_Drawing_Public($this->get_plugin_name(), $this->get_version());
+        $plugin_frontend = new Frontend\Atc_Drawing_Frontend($this->get_plugin_name(), $this->get_version());
 
-        $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
-        $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
+        $this->loader->add_action('wp_enqueue_scripts', $plugin_frontend, 'enqueue_styles');
+        $this->loader->add_action('wp_enqueue_scripts', $plugin_frontend, 'enqueue_scripts');
     }
 
     /**

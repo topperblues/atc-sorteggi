@@ -11,6 +11,13 @@
  * @package    atc-drawing
  * @subpackage atc-drawing/admin/partials
  */
+
+namespace atcDrawing\admin;
+
+use atcDrawing as NS;
+use atcDrawing\includes as Includes;
+use atcDrawing\frontend as Frontend;
+
 ?>
 
 
