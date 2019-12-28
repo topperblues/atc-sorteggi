@@ -24,6 +24,7 @@
 namespace atcDrawing\includes;
 
 use atcDrawing as NS;
+use atcDrawing\includes\lib as Lib;
 use atcDrawing\admin as Admin;
 use atcDrawing\frontend as Frontend;
 
@@ -43,6 +44,6 @@ class Atc_Drawing_Activator
         //$this->create_hunter_table();
 
         
-        //Hunters_Table::create_table();
+        //Lib\Hunters_Table::create_table();
     }
 }

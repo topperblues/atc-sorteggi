@@ -11,6 +11,11 @@
  * @package    atc-drawing
  * @subpackage atc-drawing/admin/partials
  */
+
+namespace atcDrawing\admin;
+
+use atcDrawing as NS;
+
 ?>
 
 <div id="welcome-panel" class="welcome-panel">
@@ -20,9 +25,13 @@
         <div class="welcome-panel-column-container">
             <div class="welcome-panel-column">
                 <h3>Come iniziare</h3>
-                <a class="button button-primary button-hero" href="#">Lista cacciatori</a>
+                <a class="button button-primary button-hero"
+                    href="<?=NS\PLUGIN_ADMIN_BASE_URL.'list-hunter'?>">Lista
+                    cacciatori</a>
                 <p>
-                    oppure <a href="#">Aggiungi nuovo cacciatore</a> </p>
+                    oppure <a
+                        href="<?=NS\PLUGIN_ADMIN_BASE_URL.'add-hunter'?>">Aggiungi
+                        nuovo cacciatore</a> </p>
             </div>
             <div class="welcome-panel-column">
                 <h3>Sorteggi</h3>

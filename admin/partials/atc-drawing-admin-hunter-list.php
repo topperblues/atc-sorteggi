@@ -15,10 +15,10 @@
 namespace atcDrawing\admin;
 
 use atcDrawing as NS;
-use atcDrawing\includes as Includes;
-use atcDrawing\frontend as Frontend;
+use atcDrawing\includes\lib as Lib;
 
- $huntersList = new atcDrawing\includes\Hunters_List();
+$huntersList = new Lib\Hunters_List();
+
 ?>
 
 <div class="wrap">
@@ -30,8 +30,8 @@ use atcDrawing\frontend as Frontend;
                 <div class="meta-box-sortables ui-sortable">
                     <form method="post">
                         <?php
-                                $huntersList->prepare_items();
-                                $huntersList->display();
+                                //$huntersList->prepare_items();
+                                //$huntersList->display();
                         ?>
                     </form>
                 </div>

@@ -39,6 +39,9 @@ define(NS . 'PLUGIN_NAME_DIR', plugin_dir_path(__FILE__));
 define(NS . 'PLUGIN_NAME_URL', plugin_dir_url(__FILE__));
 define(NS . 'PLUGIN_BASENAME', plugin_basename(__FILE__));
 define(NS . 'PLUGIN_TEXT_DOMAIN', 'atc-drawing');
+define(NS . 'PLUGIN_ADMIN_BASE_URL', esc_url(admin_url('/admin.php?page=' . PLUGIN_NAME . '-')));
+
+
 
 /**
  * Autoload Classes

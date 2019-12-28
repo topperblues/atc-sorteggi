@@ -15,9 +15,9 @@
 namespace atcDrawing\admin;
 
 use atcDrawing as NS;
-use atcDrawing\includes as Includes;
-use atcDrawing\frontend as Frontend;
+use atcDrawing\includes\lib as Lib;
 
+$hutersTable = new Lib\Hunters_Table();
 ?>
 
 
