@@ -20,7 +20,7 @@ use atcDrawing\includes\lib as Lib;
 //$hutersTable = new Lib\Hunters_Table();
 ?>
 <div class="container-fluid mt-3">
-    <div class="row border border-success rounded">
+    <div class="row border border-primary rounded">
         <div class="col-12 p-3">
             <h1>Inserimento</h1>
             <form method="POST" enctype="multipart/form-data">
@@ -164,7 +164,7 @@ use atcDrawing\includes\lib as Lib;
                         </select>
                     </div>
                 </div>
-                <button name="save" type="submit" class="btn btn-success">Salva</button>
+                <button name="save" type="submit" class="btn btn-primary">Salva</button>
             </form>
         </div>
     </div>

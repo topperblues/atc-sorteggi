@@ -30,8 +30,8 @@ $huntersList = new Lib\Hunters_List();
                 <div class="meta-box-sortables ui-sortable">
                     <form method="post">
                         <?php
-                                //$huntersList->prepare_items();
-                                //$huntersList->display();
+                                $huntersList->prepare_items();
+                                $huntersList->display();
                         ?>
                     </form>
                 </div>

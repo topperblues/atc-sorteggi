@@ -26,6 +26,7 @@ namespace atcDrawing\includes\lib;
 use atcDrawing as NS;
 use atcDrawing\admin as Admin;
 use atcDrawing\frontend as Frontend;
+use atcDrawing\includes\lib as Lib;
 
 class Hunters_List extends \WP_List_Table
 {
@@ -49,7 +50,10 @@ class Hunters_List extends \WP_List_Table
     public static function get_hunters($per_page = 5, $page_number = 1)
     {
         global $wpdb;
-        $sql = "SELECT * FROM {$huntersTable}";
+        
+        $table = Lib\Hunters_Table::get_table();
+
+        $sql = "SELECT * FROM {$table}";
         if (! empty($_REQUEST['orderby'])) {
             $sql .= ' ORDER BY ' . esc_sql($_REQUEST['orderby']);
             $sql .= ! empty($_REQUEST['order']) ? ' ' . esc_sql($_REQUEST['order']) : ' ASC';
@@ -67,9 +71,11 @@ class Hunters_List extends \WP_List_Table
     public static function delete_hunter($id)
     {
         global $wpdb;
+        $table = Lib\Hunters_Table::get_table();
+
         $wpdb->delete(
-            "{$huntersTable}",
-            [ 'ID' => $id ],
+            "{$table}",
+            [ 'id' => $id ],
             [ '%d' ]
         );
     }
@@ -81,7 +87,9 @@ class Hunters_List extends \WP_List_Table
     public static function record_count()
     {
         global $wpdb;
-        $sql = "SELECT COUNT(*) FROM {$huntersTable}";
+        $table = Lib\Hunters_Table::get_table();
+
+        $sql = "SELECT COUNT(*) FROM {$table}";
         return $wpdb->get_var($sql);
     }
     /** Text displayed when no hunter data is available */
@@ -100,11 +108,16 @@ class Hunters_List extends \WP_List_Table
     public function column_default($item, $column_name)
     {
         switch ($column_name) {
-            case 'address':
-            case 'city':
+            case 'numero':
+            case 'anno':
+            case 'nome':
+            case 'cf':
+            case 'tipocaccia':
+            case 'regione':
+            case 'priorita':
                 return $item[ $column_name ];
-            default:
-                return print_r($item, true); //Show the whole array for troubleshooting purposes
+            // default:
+            //     return print_r($item, true); //Show the whole array for troubleshooting purposes
         }
     }
     /**
@@ -118,7 +131,7 @@ class Hunters_List extends \WP_List_Table
     {
         return sprintf(
             '<input type="checkbox" name="bulk-delete[]" value="%s" />',
-            $item['ID']
+            $item['id']
         );
     }
     /**
@@ -128,12 +141,14 @@ class Hunters_List extends \WP_List_Table
      *
      * @return string
      */
-    public function column_name($item)
+    public function column_numero($item)
     {
         $delete_nonce = wp_create_nonce('sp_delete_hunter');
-        $title = '<strong>' . $item['name'] . '</strong>';
+        $edit_nonce = wp_create_nonce('sp_edit_hunter');
+        $title = '<strong>' . $item['numero'] . '</strong>';
         $actions = [
-            'delete' => sprintf('<a href="?page=%s&action=%s&hunter=%s&_wpnonce=%s">Delete</a>', esc_attr($_REQUEST['page']), 'delete', absint($item['ID']), $delete_nonce)
+            'edit' => sprintf('<a href="?page=%s&action=%s&hunter=%s&_wpnonce=%s">Edit</a>', esc_attr($_REQUEST['page']), 'edit', absint($item['id']), $edit_nonce),
+            'delete' => sprintf('<a href="?page=%s&action=%s&hunter=%s&_wpnonce=%s">Delete</a>', esc_attr($_REQUEST['page']), 'delete', absint($item['id']), $delete_nonce)
         ];
         return $title . $this->row_actions($actions);
     }
@@ -146,9 +161,13 @@ class Hunters_List extends \WP_List_Table
     {
         $columns = [
             'cb'      => '<input type="checkbox" />',
-            'name'    => __('Name', 'sp'),
-            'address' => __('Address', 'sp'),
-            'city'    => __('City', 'sp')
+            'numero'    => __('Numero', 'sp'),
+            'anno'    => __('Anno', 'sp'),
+            'nome' => __('Nome', 'sp'),
+            'cf'    => __('Codice fiscale', 'sp'),
+            'tipocaccia'    => __('Tipologia di caccia', 'sp'),
+            'regione'    => __('Regione', 'sp'),
+            'priorita'    => __('Priorità', 'sp')
         ];
         return $columns;
     }
@@ -160,8 +179,13 @@ class Hunters_List extends \WP_List_Table
     public function get_sortable_columns()
     {
         $sortable_columns = array(
-            'name' => array( 'name', true ),
-            'city' => array( 'city', false )
+            'numero'    => array('numero', true),
+            'anno'    => array('anno', true),
+            'nome' => array('nome', true),
+            'cf'    => array('cf', true),
+            'tipocaccia'    => array('tipocaccia', true),
+            'regione'    => array('regione', true),
+            'priorita'    => array('priorita', true)
         );
         return $sortable_columns;
     }
@@ -182,7 +206,10 @@ class Hunters_List extends \WP_List_Table
      */
     public function prepare_items()
     {
-        $this->_column_headers = $this->get_column_info();
+        $columns = $this->get_columns();
+        $hidden = array();
+        $sortable = $this->get_sortable_columns();
+        $this->_column_headers = array($columns, $hidden, $sortable);
         /** Process bulk action */
         $this->process_bulk_action();
         $per_page     = $this->get_items_per_page('hunters_per_page', 5);
@@ -204,6 +231,19 @@ class Hunters_List extends \WP_List_Table
                 die('Go get a life script kiddies');
             } else {
                 self::delete_hunter(absint($_GET['hunter']));
+                // esc_url_raw() is used to prevent converting ampersand in url to "#038;"
+                // add_query_arg() return the current url
+                wp_redirect(esc_url_raw(add_query_arg()));
+                exit;
+            }
+        }
+        if ('edit' === $this->current_action()) {
+            // In our file that handles the request, verify the nonce.
+            $nonce = esc_attr($_REQUEST['_wpnonce']);
+            if (! wp_verify_nonce($nonce, 'sp_edit_hunter')) {
+                die('Go get a life script kiddies');
+            } else {
+                // TODO: redirect to admin edit hunter!!!
                 // esc_url_raw() is used to prevent converting ampersand in url to "#038;"
                 // add_query_arg() return the current url
                 wp_redirect(esc_url_raw(add_query_arg()));
