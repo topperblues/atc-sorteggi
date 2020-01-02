@@ -44,6 +44,6 @@ class Atc_Drawing_Activator
         //$this->create_hunter_table();
 
         
-        //Lib\Hunters_Table::create_table();
+        Lib\Hunters_Table::create_table();
     }
 }

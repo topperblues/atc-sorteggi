@@ -53,6 +53,23 @@ class Hunters_Table
             $sql .= "  `datanas` datetime NOT NULL DEFAULT '0000-00-00 00:00:00', ";
             $sql .= "  `comunenas` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
             $sql .= "  `indirizzo` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
+            $sql .= "  `cap` int(6) unsigned   NOT NULL, ";
+            $sql .= "  `localita` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
+            $sql .= "  `provincia` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
+            $sql .= "  `telefono` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
+            $sql .= "  `cellulare` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
+            $sql .= "  `cf` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
+            $sql .= "  `note` varchar(1000) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
+            $sql .= "  `panumero` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
+            $sql .= "  `paquestura` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
+            $sql .= "  `padata` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
+            $sql .= "  `painvio` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
+            $sql .= "  `paallegatonome` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
+            $sql .= "  `paallegatotipo` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
+            $sql .= "  `paallegato` BLOB, ";
+            $sql .= "  `tipocaccia` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
+            $sql .= "  `regione` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
+            $sql .= "  `priorita` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '', ";
             $sql .= "  PRIMARY KEY `ana_id` (`id`) ";
             $sql .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1 ; ";
             require_once(ABSPATH . '/wp-admin/includes/upgrade.php');
@@ -66,6 +83,6 @@ class Hunters_Table
 
         $wp_track_table = self::get_table();
 
-        $wpdb->insert($wp_track_table, $data, $format);
+        $wpdb->insert($wp_track_table, $data);
     }
 }

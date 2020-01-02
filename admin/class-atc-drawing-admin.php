@@ -155,7 +155,20 @@ class Atc_Drawing_Admin
      */
     public function enqueue_styles()
     {
-        wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/atc-drawing-admin.css', array(), $this->version, 'all');
+        //wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/bootstrap/bootstrap-reboot.min.css', array(), $this->version, 'all');
+        //wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/atc-drawing-admin.css', array(), $this->version, 'all');
+        wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/bootstrap/bootstrap.min.css', array(), $this->version, 'all');
+        // wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/bootstrap/bootstrap-grid.min.css', array(), $this->version, 'all');
+    }
+
+    /**
+     * Reset the stylesheets for the admin area.
+     *
+     * @since    1.0.0
+     */
+    public function reset_styles()
+    {
+        //wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/bootstrap/bootstrap-reboot.min.css', array(), $this->version, 'all');
     }
 
     /**
@@ -165,6 +178,8 @@ class Atc_Drawing_Admin
      */
     public function enqueue_scripts()
     {
+        //wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/jquery-3.4.1.slim.min.js', array(), $this->version, false);
+        wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/bootstrap/bootstrap.bundle.min.js', array( 'jquery' ), $this->version, false);
         wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/atc-drawing-admin.js', array( 'jquery' ), $this->version, false);
     }
 }

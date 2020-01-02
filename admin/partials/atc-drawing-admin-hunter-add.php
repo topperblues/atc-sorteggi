@@ -17,71 +17,199 @@ namespace atcDrawing\admin;
 use atcDrawing as NS;
 use atcDrawing\includes\lib as Lib;
 
-$hutersTable = new Lib\Hunters_Table();
+//$hutersTable = new Lib\Hunters_Table();
 ?>
+<div class="container-fluid mt-3">
+    <div class="row border border-success rounded">
+        <div class="col-12 p-3">
+            <h1>Inserimento</h1>
+            <form method="POST" enctype="multipart/form-data">
 
+                <h5>Scheda</h5>
 
-<h1>Inserimento</h1>
+                <div class="form-row">
+                    <div class="form-group col-4">
+                        <label for="numero">Numero</label>
+                        <input class="form-control" name="numero" type="number" id="numero" />
+                    </div>
+                    <div class="form-group col-4">
+                        <label for="datareg">Data di registrazione</label>
+                        <input class="form-control" name="datareg" type="date" id="datareg" />
+                    </div>
+                    <div class="form-group col-4">
+                        <label for="anno">Anno</label>
+                        <input class="form-control" name="anno" type="number" id="anno" />
+                    </div>
+                </div>
+
+                <h5>Anagrafica</h5>
+
+                <div class="form-group">
+                    <label for="nome">Nome</label>
+                    <input class="form-control" name="nome" type="text" id="nome" />
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label for="datanas">Data di nascita</label>
+                        <input class="form-control" name="datanas" type="date" id="datanas" />
+                    </div>
+                    <div class="form-group col-6">
+                        <label for="comunenas">Luogo di nascita</label>
+                        <input class="form-control" name="comunenas" type="text" id="comunenas" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="indirizzo">Indirizzo</label>
+                    <input class="form-control" name="indirizzo" type="text" id="indirizzo" />
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-4">
+                        <label for="cap">CAP</label>
+                        <input class="form-control" name="cap" type="number" id="cap" />
+                    </div>
+                    <div class="form-group col-4">
+                        <label for="localita">Località</label>
+                        <input class="form-control" name="localita" type="text" id="localita" />
+                    </div>
+                    <div class="form-group col-4">
+                        <label for="provincia">Provincia</label>
+                        <input class="form-control" name="provincia" type="text" id="provincia" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label for="telefono">Telefono</label>
+                        <input class="form-control" name="telefono" type="text" id="telefono" />
+                    </div>
+                    <div class="form-group col-6">
+                        <label for="cell">Cellulare</label>
+                        <input class="form-control" name="cell" type="text" id="cell" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="cf">Codice fiscale</label>
+                    <input class="form-control" name="cf" type="text" id="cf" />
+                </div>
+                <div class="form-group">
+                    <label for="note">Note</label>
+                    <textarea class="form-control" id="note" name="note"></textarea>
+                </div>
+
+                <h5>Porto d'armi</h5>
+
+                <div class="form-row">
+                    <div class="form-group col-4">
+                        <label for="panumero">Numero</label>
+                        <input class="form-control" name="panumero" type="text" id="panumero" />
+                    </div>
+                    <div class="form-group col-4">
+                        <label for="paquestura">Rilasciato dalla questura di</label>
+                        <input class="form-control" name="paquestura" type="text" id="paquestura" />
+                    </div>
+                    <div class="form-group col-4">
+                        <label for="padata">In data</label>
+                        <input class="form-control" name="padata" type="date" id="padata" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label for="painvio">Mezzo di invio</label>
+                        <input class="form-control" name="painvio" type="text" id="painvio" />
+                    </div>
+                    <div class="form-group col-6">
+                        <label for="paallegato">Allegato</label>
+                        <input class="form-control" name="paallegato" type="file" id="paallegato" />
+                    </div>
+                </div>
+
+                <h5>Richiesta</h5>
+                <div class="form-group">
+                    <label for="tipocaccia">Tipologia di caccia</label>
+                    <select class="form-control" id="tipocaccia" name="tipocaccia">
+                        <option value="cani-ferma">Caccia cani ferma</option>
+                        <option value="cinghiale">Caccia cinghiale</option>
+                        <option value="lepre">Caccia lepre</option>
+                        <option value="migratoria">Caccia migratoria</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label for="regione">Regione</label>
+                        <select class="form-control" id="regione" name="regione">
+                            <option value="abruzzo">Abruzzo</option>
+                            <option value="basilicata">Basilicata</option>
+                            <option value="campania">Campania</option>
+                            <option value="emilia-romagna">Emilia Romagna</option>
+                            <option value="lazio">Lazio</option>
+                            <option value="liguria">Liguria</option>
+                            <option value="lombardia">Lombardia</option>
+                            <option value="marche">Marche</option>
+                            <option value="puglia">Puglia</option>
+                            <option value="sicilia">Sicilia</option>
+                            <option value="toscana">Toscana</option>
+                            <option value="sardegna">Sardegna</option>
+                            <option value="umbria">Umbria</option>
+                            <option value="veneto">Veneto</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-6">
+                        <label for="priorita">Priorità</label>
+                        <select class="form-control" id="exampleFormControlSelect1">
+                            <option value="nessuna">Nessuna</option>
+                            <option value="a">A</option>
+                            <option value="b">B</option>
+                            <option value="c">C</option>
+                            <option value="d">D</option>
+                            <option value="e">E</option>
+                        </select>
+                    </div>
+                </div>
+                <button name="save" type="submit" class="btn btn-success">Salva</button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <br />
-<form method="POST">
-    <h2>Scheda</h2>
-    <table class="form-table" role="presentation">
-
-        <tbody>
-            <tr>
-                <th scope="row"><label for="numero">Numero</label></th>
-                <td><input name="numero" type="number" id="numero" /></td>
-                <th scope="row"><label for="datareg">Data di registrazione</label></th>
-                <td><input name="datareg" type="date" id="datareg" /></td>
-                <th scope="row"><label for="anno">Anno</label></th>
-                <td><input name="anno" type="number" id="anno" /></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <h2>Anagrafica</h2>
-    <table class="form-table" role="presentation">
-        <tbody>
-            <tr>
-                <th scope="row"><label for="nome">Nome</label></th>
-                <td colspan="5"><input name="nome" type="text" id="nome" /></td>
-            </tr>
-            <tr>
-                <th scope="row"><label for="datanas">Data di nascita</label></th>
-                <td><input name="datanas" type="date" id="datanas" /></td>
-                <th scope="row"><label for="comunenas">Luogo di nascita</label></th>
-                <td colspan="3"><input name="comunenas" type="text" id="comunenas" /></td>
-            </tr>
-            <tr>
-                <th scope="row"><label for="indirizzo">Indirizzo</label></th>
-                <td><input name="indirizzo" type="text" id="indirizzo" /></td>
-            </tr>
-            <tr>
-                <th scope="row"><label for="cap">CAP</label></th>
-                <td><input name="cap" type="number" id="cap" /></td>
-                <th scope="row"><label for="loc">Località</label></th>
-                <td><input name="loc" type="text" id="loc" /></td>
-                <th scope="row"><label for="prov">Provincia</label></th>
-                <td><input name="prov" type="text" id="prov" /></td>
-            </tr>
-            <tr>
-                <th scope="row"><label for="tel">Telefono</label></th>
-                <td><input name="tel" type="number" id="tel" /></td>
-                <th scope="row"><label for="cell">Cellulare</label></th>
-                <td><input name="cell" type="number" id="cell" /></td>
-            </tr>
-        </tbody>
-    </table>
 
 
 
-</form>
+
+
+
+
+
 
 <?php
+if (isset($_POST['save'])) {
+    $data = array();
+    $data['numero'] = $_POST['numero'];
+    $data['datareg'] = $_POST['datareg'];
+    $data['anno'] = $_POST['anno'];
+    $data['nome'] = $_POST['nome'];
+    $data['datanas'] = $_POST['datanas'];
+    $data['comunenas'] = $_POST['comunenas'];
+    $data['indirizzo'] = $_POST['indirizzo'];
+    $data['cap'] = $_POST['cap'];
+    $data['localita'] = $_POST['localita'];
+    $data['provincia'] = $_POST['provincia'];
+    $data['telefono'] = $_POST['telefono'];
+    $data['cellulare'] = $_POST['cellulare'];
+    $data['cf'] = $_POST['cf'];
+    $data['note'] = $_POST['note'];
+    $data['panumero'] = $_POST['panumero'];
+    $data['paquestura'] = $_POST['paquestura'];
+    $data['padata'] = $_POST['padata'];
+    $data['painvio'] = $_POST['painvio'];
 
-function ATC_save_ana()
-{
-    global $wpdb;
-    $table_name = $wpdb->prefix.'atc-anagrafica';
-    $wpdb->insert($table_name, $data, $format);
+    $data['paallegatonome'] = $_FILES['paallegato']['name'];
+    $data['paallegatotipo'] = $_FILES['paallegato']['type'];
+    $data['paallegato'] = file_get_contents($_FILES['paallegato']['tmp_name']);
+
+    $data['tipocaccia'] = $_POST['tipocaccia'];
+    $data['regione'] = $_POST['regione'];
+    $data['priorita'] = $_POST['priorita'];
+
+
+    Lib\Hunters_Table::save($data);
 }
