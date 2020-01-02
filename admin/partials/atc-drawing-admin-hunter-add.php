@@ -82,8 +82,8 @@ use atcDrawing\includes\lib as Lib;
                         <input class="form-control" name="telefono" type="text" id="telefono" />
                     </div>
                     <div class="form-group col-6">
-                        <label for="cell">Cellulare</label>
-                        <input class="form-control" name="cell" type="text" id="cell" />
+                        <label for="cellulare">Cellulare</label>
+                        <input class="form-control" name="cellulare" type="text" id="cellulare" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -154,7 +154,7 @@ use atcDrawing\includes\lib as Lib;
                     </div>
                     <div class="form-group col-6">
                         <label for="priorita">Priorità</label>
-                        <select class="form-control" id="exampleFormControlSelect1">
+                        <select class="form-control" id="priorita" name="priorita">
                             <option value="nessuna">Nessuna</option>
                             <option value="a">A</option>
                             <option value="b">B</option>
@@ -182,34 +182,8 @@ use atcDrawing\includes\lib as Lib;
 
 <?php
 if (isset($_POST['save'])) {
-    $data = array();
-    $data['numero'] = $_POST['numero'];
-    $data['datareg'] = $_POST['datareg'];
-    $data['anno'] = $_POST['anno'];
-    $data['nome'] = $_POST['nome'];
-    $data['datanas'] = $_POST['datanas'];
-    $data['comunenas'] = $_POST['comunenas'];
-    $data['indirizzo'] = $_POST['indirizzo'];
-    $data['cap'] = $_POST['cap'];
-    $data['localita'] = $_POST['localita'];
-    $data['provincia'] = $_POST['provincia'];
-    $data['telefono'] = $_POST['telefono'];
-    $data['cellulare'] = $_POST['cellulare'];
-    $data['cf'] = $_POST['cf'];
-    $data['note'] = $_POST['note'];
-    $data['panumero'] = $_POST['panumero'];
-    $data['paquestura'] = $_POST['paquestura'];
-    $data['padata'] = $_POST['padata'];
-    $data['painvio'] = $_POST['painvio'];
-
-    $data['paallegatonome'] = $_FILES['paallegato']['name'];
-    $data['paallegatotipo'] = $_FILES['paallegato']['type'];
-    $data['paallegato'] = file_get_contents($_FILES['paallegato']['tmp_name']);
-
-    $data['tipocaccia'] = $_POST['tipocaccia'];
-    $data['regione'] = $_POST['regione'];
-    $data['priorita'] = $_POST['priorita'];
-
-
-    Lib\Hunters_Table::save($data);
+    $_POST['paallegatonome'] = $_FILES['paallegato']['name'];
+    $_POST['paallegatotipo'] = $_FILES['paallegato']['type'];
+    $_POST['paallegato'] = file_get_contents($_FILES['paallegato']['tmp_name']);
+    Lib\Hunters_Table::save($_POST);
 }
