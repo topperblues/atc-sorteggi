@@ -29,10 +29,76 @@ use atcDrawing\frontend as Frontend;
 
 class Hunters_Table
 {
+    private static function get_columns()
+    {
+        global $wpdb;
+
+        $wp_track_table = self::get_table();
+        
+        return $wpdb->get_col("DESC {$wp_track_table}", 0);
+    }
+
+    private static function filter_keys($arr)
+    {
+        $allowed_keys = self::get_columns();
+        return array_intersect_key($arr, array_flip($allowed_keys));
+    }
+
     public static function get_table()
     {
         global $table_prefix;
         return $table_prefix . "hunter";
+    }
+
+    public static function get_default()
+    {
+        $cols = array_flip(self::get_columns());
+        $res = array_map(function ($val) {
+            return '';
+        }, $cols);
+        return $res;
+    }
+
+    public static function col_tipocaccia_options()
+    {
+        return array(
+            ["name" => "caccia-cani-ferma", "attr" => []],
+            ["name" => "caccia-cinghiale",  "attr" => []],
+            ["name" => "caccia-lepre",  "attr" => []],
+            ["name" => "caccia-migratoria", "attr" => []]
+        );
+    }
+
+    public static function col_regione_options()
+    {
+        return array(
+            ["name"=> "abruzzo","attr" => []],
+            ["name"=> "basilicata","attr" => []],
+            ["name"=> "campania","attr" => []],
+            ["name"=> "emilia-romagna","attr" => []],
+            ["name"=> "lazio","attr" => []],
+            ["name"=> "liguria","attr" => []],
+            ["name"=> "lombardia","attr" => []],
+            ["name"=> "marche","attr" => []],
+            ["name"=> "puglia","attr" => []],
+            ["name"=> "sicilia","attr" => []],
+            ["name"=> "toscana","attr" => []],
+            ["name"=> "sardegna","attr" => []],
+            ["name"=> "umbria","attr" => []],
+            ["name"=> "veneto","attr" => []]
+        );
+    }
+
+    public static function col_priorita_options()
+    {
+        return array(
+            ["name" => "nessuna", "attr" => []],
+            ["name" => "a",  "attr" => []],
+            ["name" => "b",  "attr" => []],
+            ["name" => "c", "attr" => []],
+            ["name" => "d", "attr" => []],
+            ["name" => "e", "attr" => []]
+        );
     }
 
     public static function create_table()
@@ -77,21 +143,6 @@ class Hunters_Table
         }
     }
 
-    public static function get_columns()
-    {
-        global $wpdb;
-
-        $wp_track_table = self::get_table();
-        
-        return $wpdb->get_col("DESC {$wp_track_table}", 0);
-    }
-
-    public static function filter_keys($arr)
-    {
-        $allowed_keys = self::get_columns();
-        return array_intersect_key($arr, array_flip($allowed_keys));
-    }
-
     public static function save($data)
     {
         global $wpdb;
@@ -99,5 +150,64 @@ class Hunters_Table
         $wp_track_table = self::get_table();
 
         $wpdb->insert($wp_track_table, self::filter_keys($data));
+    }
+
+    public static function get($id)
+    {
+        global $wpdb;
+        
+        $table = self::get_table();
+
+        $sql = "SELECT * FROM {$table} where id={$id}";
+        $result = $wpdb->get_results($sql, 'ARRAY_A');
+        if (count($result)!=1) {
+            return false;
+        }
+        return $result[0];
+    }
+
+    public static function get_list($per_page, $page_number)
+    {
+        global $wpdb;
+
+        $table = self::get_table();
+
+        
+        $sql = "SELECT * FROM {$table}";
+        if (! empty($_REQUEST['orderby'])) {
+            $sql .= ' ORDER BY ' . esc_sql($_REQUEST['orderby']);
+            $sql .= ! empty($_REQUEST['order']) ? ' ' . esc_sql($_REQUEST['order']) : ' ASC';
+        }
+        $sql .= " LIMIT $per_page";
+        $sql .= ' OFFSET ' . ($page_number - 1) * $per_page;
+        $result = $wpdb->get_results($sql, 'ARRAY_A');
+        return $result;
+    }
+
+    public static function delete($id)
+    {
+        global $wpdb;
+
+        $table = self::get_table();
+
+        $wpdb->delete(
+            "{$table}",
+            [ 'id' => $id ],
+            [ '%d' ]
+        );
+    }
+
+    /**
+     * Returns the count of records in the database.
+     *
+     * @return null|string
+     */
+    public static function record_count()
+    {
+        global $wpdb;
+        $table = self::get_table();
+
+        $sql = "SELECT COUNT(*) FROM {$table}";
+        return $wpdb->get_var($sql);
     }
 }

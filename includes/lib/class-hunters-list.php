@@ -49,18 +49,8 @@ class Hunters_List extends \WP_List_Table
      */
     public static function get_hunters($per_page = 5, $page_number = 1)
     {
-        global $wpdb;
-        
-        $table = Lib\Hunters_Table::get_table();
+        $result = Lib\Hunters_Table::get_list($per_page, $page_number);
 
-        $sql = "SELECT * FROM {$table}";
-        if (! empty($_REQUEST['orderby'])) {
-            $sql .= ' ORDER BY ' . esc_sql($_REQUEST['orderby']);
-            $sql .= ! empty($_REQUEST['order']) ? ' ' . esc_sql($_REQUEST['order']) : ' ASC';
-        }
-        $sql .= " LIMIT $per_page";
-        $sql .= ' OFFSET ' . ($page_number - 1) * $per_page;
-        $result = $wpdb->get_results($sql, 'ARRAY_A');
         return $result;
     }
     /**
@@ -70,14 +60,7 @@ class Hunters_List extends \WP_List_Table
      */
     public static function delete_hunter($id)
     {
-        global $wpdb;
-        $table = Lib\Hunters_Table::get_table();
-
-        $wpdb->delete(
-            "{$table}",
-            [ 'id' => $id ],
-            [ '%d' ]
-        );
+        $table = Lib\Hunters_Table::delete();
     }
     /**
      * Returns the count of records in the database.
@@ -86,11 +69,7 @@ class Hunters_List extends \WP_List_Table
      */
     public static function record_count()
     {
-        global $wpdb;
-        $table = Lib\Hunters_Table::get_table();
-
-        $sql = "SELECT COUNT(*) FROM {$table}";
-        return $wpdb->get_var($sql);
+        $table = Lib\Hunters_Table::record_count();
     }
     /** Text displayed when no hunter data is available */
     public function no_items()
@@ -145,10 +124,12 @@ class Hunters_List extends \WP_List_Table
     {
         $delete_nonce = wp_create_nonce('sp_delete_hunter');
         $edit_nonce = wp_create_nonce('sp_edit_hunter');
+        $show_nonce = wp_create_nonce('sp_show_hunter');
         $title = '<strong>' . $item['numero'] . '</strong>';
         $actions = [
-            'edit' => sprintf('<a href="?page=%s&action=%s&hunter=%s&_wpnonce=%s">Edit</a>', esc_attr($_REQUEST['page']), 'edit', absint($item['id']), $edit_nonce),
-            'delete' => sprintf('<a href="?page=%s&action=%s&hunter=%s&_wpnonce=%s">Delete</a>', esc_attr($_REQUEST['page']), 'delete', absint($item['id']), $delete_nonce)
+            'show' => sprintf('<a href="?page=%s&action=%s&hunter=%s&_wpnonce=%s">Visualizza</a>', esc_attr($_REQUEST['page']), 'show', absint($item['id']), $show_nonce),
+            'edit' => sprintf('<a href="?page=%s&action=%s&hunter=%s&_wpnonce=%s">Modifica</a>', esc_attr($_REQUEST['page']), 'edit', absint($item['id']), $edit_nonce),
+            'delete' => sprintf('<a href="?page=%s&action=%s&hunter=%s&_wpnonce=%s">Elimina</a>', esc_attr($_REQUEST['page']), 'delete', absint($item['id']), $delete_nonce)
         ];
         return $title . $this->row_actions($actions);
     }
@@ -233,7 +214,7 @@ class Hunters_List extends \WP_List_Table
                 self::delete_hunter(absint($_GET['hunter']));
                 // esc_url_raw() is used to prevent converting ampersand in url to "#038;"
                 // add_query_arg() return the current url
-                wp_redirect(esc_url_raw(add_query_arg()));
+                wp_redirect(esc_url_raw(add_query_arg('hunter', 'deleted', NS\PLUGIN_ADMIN_BASE_URL.'list-hunter')));
                 exit;
             }
         }
@@ -246,7 +227,20 @@ class Hunters_List extends \WP_List_Table
                 // TODO: redirect to admin edit hunter!!!
                 // esc_url_raw() is used to prevent converting ampersand in url to "#038;"
                 // add_query_arg() return the current url
-                wp_redirect(esc_url_raw(add_query_arg()));
+                wp_redirect(esc_url_raw(add_query_arg('hunter', $_GET['hunter'], NS\PLUGIN_ADMIN_BASE_URL.'add-hunter')));
+                exit;
+            }
+        }
+        if ('show' === $this->current_action()) {
+            // In our file that handles the request, verify the nonce.
+            $nonce = esc_attr($_REQUEST['_wpnonce']);
+            if (! wp_verify_nonce($nonce, 'sp_show_hunter')) {
+                die('Go get a life script kiddies');
+            } else {
+                // TODO: redirect to admin edit hunter!!!
+                // esc_url_raw() is used to prevent converting ampersand in url to "#038;"
+                // add_query_arg() return the current url
+                wp_redirect(esc_url_raw(add_query_arg('hunter', $_GET['hunter'], NS\PLUGIN_ADMIN_BASE_URL.'show-hunter')));
                 exit;
             }
         }
@@ -261,7 +255,7 @@ class Hunters_List extends \WP_List_Table
             }
             // esc_url_raw() is used to prevent converting ampersand in url to "#038;"
             // add_query_arg() return the current url
-            wp_redirect(esc_url_raw(add_query_arg()));
+            wp_redirect(esc_url_raw(add_query_arg('hunter', 'bulk-deleted', NS\PLUGIN_ADMIN_BASE_URL.'list-hunter')));
             exit;
         }
     }

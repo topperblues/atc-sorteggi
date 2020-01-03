@@ -17,7 +17,18 @@ namespace atcDrawing\admin;
 use atcDrawing as NS;
 use atcDrawing\includes\lib as Lib;
 
-//$hutersTable = new Lib\Hunters_Table();
+$hunter = Lib\Hunters_Table::get_default();
+
+if (isset($_GET['hunter'])) {
+    $hunter = Lib\Hunters_Table::get($_GET['hunter']);
+}
+
+$select_attr = array('class' => 'form-control');
+
+$select_tipocaccia = Lib\Views_Util::create_select('tipocaccia', Lib\Hunters_Table::col_tipocaccia_options(), $select_attr, $hunter['tipocaccia']);
+$select_regione = Lib\Views_Util::create_select('regione', Lib\Hunters_Table::col_regione_options(), $select_attr, $hunter['regione']);
+$select_priorita = Lib\Views_Util::create_select('priorita', Lib\Hunters_Table::col_priorita_options(), $select_attr, $hunter['priorita']);
+
 ?>
 <div class="container-fluid mt-3">
     <div class="row border border-primary rounded">
@@ -30,15 +41,18 @@ use atcDrawing\includes\lib as Lib;
                 <div class="form-row">
                     <div class="form-group col-4">
                         <label for="numero">Numero</label>
-                        <input class="form-control" name="numero" type="number" id="numero" />
+                        <input class="form-control" name="numero" type="number" id="numero"
+                            value="<?=$hunter['numero']?>" />
                     </div>
                     <div class="form-group col-4">
                         <label for="datareg">Data di registrazione</label>
-                        <input class="form-control" name="datareg" type="date" id="datareg" />
+                        <input class="form-control" name="datareg" type="date" id="datareg"
+                            value="<?=date_format(date_create($hunter['datareg']), "Y-m-d")?>" />
                     </div>
                     <div class="form-group col-4">
                         <label for="anno">Anno</label>
-                        <input class="form-control" name="anno" type="number" id="anno" />
+                        <input class="form-control" name="anno" type="number" id="anno"
+                            value="<?=$hunter['anno']?>" />
                     </div>
                 </div>
 
@@ -46,53 +60,64 @@ use atcDrawing\includes\lib as Lib;
 
                 <div class="form-group">
                     <label for="nome">Nome</label>
-                    <input class="form-control" name="nome" type="text" id="nome" />
+                    <input class="form-control" name="nome" type="text" id="nome"
+                        value="<?=$hunter['nome']?>" />
                 </div>
                 <div class="form-row">
                     <div class="form-group col-6">
                         <label for="datanas">Data di nascita</label>
-                        <input class="form-control" name="datanas" type="date" id="datanas" />
+                        <input class="form-control" name="datanas" type="date" id="datanas"
+                            value="<?=date_format(date_create($hunter['datanas']), "Y-m-d")?>" />
                     </div>
                     <div class="form-group col-6">
                         <label for="comunenas">Luogo di nascita</label>
-                        <input class="form-control" name="comunenas" type="text" id="comunenas" />
+                        <input class="form-control" name="comunenas" type="text" id="comunenas"
+                            value="<?=$hunter['comunenas']?>" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="indirizzo">Indirizzo</label>
-                    <input class="form-control" name="indirizzo" type="text" id="indirizzo" />
+                    <input class="form-control" name="indirizzo" type="text" id="indirizzo"
+                        value="<?=$hunter['indirizzo']?>" />
                 </div>
                 <div class="form-row">
                     <div class="form-group col-4">
                         <label for="cap">CAP</label>
-                        <input class="form-control" name="cap" type="number" id="cap" />
+                        <input class="form-control" name="cap" type="number" id="cap"
+                            value="<?=$hunter['cap']?>" />
                     </div>
                     <div class="form-group col-4">
                         <label for="localita">Località</label>
-                        <input class="form-control" name="localita" type="text" id="localita" />
+                        <input class="form-control" name="localita" type="text" id="localita"
+                            value="<?=$hunter['localita']?>" />
                     </div>
                     <div class="form-group col-4">
                         <label for="provincia">Provincia</label>
-                        <input class="form-control" name="provincia" type="text" id="provincia" />
+                        <input class="form-control" name="provincia" type="text" id="provincia"
+                            value="<?=$hunter['provincia']?>" />
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-6">
                         <label for="telefono">Telefono</label>
-                        <input class="form-control" name="telefono" type="text" id="telefono" />
+                        <input class="form-control" name="telefono" type="text" id="telefono"
+                            value="<?=$hunter['telefono']?>" />
                     </div>
                     <div class="form-group col-6">
                         <label for="cellulare">Cellulare</label>
-                        <input class="form-control" name="cellulare" type="text" id="cellulare" />
+                        <input class="form-control" name="cellulare" type="text" id="cellulare"
+                            value="<?=$hunter['cellulare']?>" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="cf">Codice fiscale</label>
-                    <input class="form-control" name="cf" type="text" id="cf" />
+                    <input class="form-control" name="cf" type="text" id="cf"
+                        value="<?=$hunter['cf']?>" />
                 </div>
                 <div class="form-group">
                     <label for="note">Note</label>
-                    <textarea class="form-control" id="note" name="note"></textarea>
+                    <textarea class="form-control" id="note"
+                        name="note"><?=$hunter['note']?></textarea>
                 </div>
 
                 <h5>Porto d'armi</h5>
@@ -100,21 +125,25 @@ use atcDrawing\includes\lib as Lib;
                 <div class="form-row">
                     <div class="form-group col-4">
                         <label for="panumero">Numero</label>
-                        <input class="form-control" name="panumero" type="text" id="panumero" />
+                        <input class="form-control" name="panumero" type="text" id="panumero"
+                            value="<?=$hunter['panumero']?>" />
                     </div>
                     <div class="form-group col-4">
                         <label for="paquestura">Rilasciato dalla questura di</label>
-                        <input class="form-control" name="paquestura" type="text" id="paquestura" />
+                        <input class="form-control" name="paquestura" type="text" id="paquestura"
+                            value="<?=$hunter['paquestura']?>" />
                     </div>
                     <div class="form-group col-4">
                         <label for="padata">In data</label>
-                        <input class="form-control" name="padata" type="date" id="padata" />
+                        <input class="form-control" name="padata" type="date" id="padata"
+                            value="<?=$hunter['padata']?>" />
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-6">
                         <label for="painvio">Mezzo di invio</label>
-                        <input class="form-control" name="painvio" type="text" id="painvio" />
+                        <input class="form-control" name="painvio" type="text" id="painvio"
+                            value="<?=$hunter['painvio']?>" />
                     </div>
                     <div class="form-group col-6">
                         <label for="paallegato">Allegato</label>
@@ -125,43 +154,16 @@ use atcDrawing\includes\lib as Lib;
                 <h5>Richiesta</h5>
                 <div class="form-group">
                     <label for="tipocaccia">Tipologia di caccia</label>
-                    <select class="form-control" id="tipocaccia" name="tipocaccia">
-                        <option value="cani-ferma">Caccia cani ferma</option>
-                        <option value="cinghiale">Caccia cinghiale</option>
-                        <option value="lepre">Caccia lepre</option>
-                        <option value="migratoria">Caccia migratoria</option>
-                    </select>
+                    <?=$select_tipocaccia?>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-6">
                         <label for="regione">Regione</label>
-                        <select class="form-control" id="regione" name="regione">
-                            <option value="abruzzo">Abruzzo</option>
-                            <option value="basilicata">Basilicata</option>
-                            <option value="campania">Campania</option>
-                            <option value="emilia-romagna">Emilia Romagna</option>
-                            <option value="lazio">Lazio</option>
-                            <option value="liguria">Liguria</option>
-                            <option value="lombardia">Lombardia</option>
-                            <option value="marche">Marche</option>
-                            <option value="puglia">Puglia</option>
-                            <option value="sicilia">Sicilia</option>
-                            <option value="toscana">Toscana</option>
-                            <option value="sardegna">Sardegna</option>
-                            <option value="umbria">Umbria</option>
-                            <option value="veneto">Veneto</option>
-                        </select>
+                        <?=$select_regione?>
                     </div>
                     <div class="form-group col-6">
                         <label for="priorita">Priorità</label>
-                        <select class="form-control" id="priorita" name="priorita">
-                            <option value="nessuna">Nessuna</option>
-                            <option value="a">A</option>
-                            <option value="b">B</option>
-                            <option value="c">C</option>
-                            <option value="d">D</option>
-                            <option value="e">E</option>
-                        </select>
+                        <?=$select_priorita?>
                     </div>
                 </div>
                 <button name="save" type="submit" class="btn btn-primary">Salva</button>

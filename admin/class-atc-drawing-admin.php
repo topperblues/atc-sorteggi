@@ -106,6 +106,16 @@ class Atc_Drawing_Admin
      *
      * @since 1.0.0
      */
+    public function show_hunter_page($page)
+    {
+        include(plugin_dir_path(__FILE__) . 'partials/atc-drawing-admin-hunter-show.php');
+    }
+
+    /**
+     * Add the WPHost Welcome Panel
+     *
+     * @since 1.0.0
+     */
     public function get_admin_page($page)
     {
         include(plugin_dir_path(__FILE__) . 'partials/atc-drawing-admin-welcome.php');
@@ -146,6 +156,16 @@ class Atc_Drawing_Admin
             array( $this, 'list_hunter_page' ),
             2
         );
+
+        add_submenu_page(
+            $this->plugin_name,
+            'Ambito Territoriale di Caccia',
+            'Visualizza cacciatore',
+            $this->capability,
+            $this->plugin_name . '-show-hunter',
+            array( $this, 'show_hunter_page' ),
+            3
+        );
     }
 
     /**
@@ -181,5 +201,15 @@ class Atc_Drawing_Admin
         //wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/jquery-3.4.1.slim.min.js', array(), $this->version, false);
         wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/bootstrap/bootstrap.bundle.min.js', array( 'jquery' ), $this->version, false);
         wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/atc-drawing-admin.js', array( 'jquery' ), $this->version, false);
+    }
+
+    /**
+     * Clean output buffer for the admin area.
+     *
+     * @since    1.0.0
+     */
+    public function clean_output_buffer()
+    {
+        ob_start();
     }
 }

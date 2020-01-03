@@ -154,6 +154,7 @@ class Atc_Drawing
         //$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'reset_styles', 5);
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles', 50);
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts', 90);
+        $this->loader->add_action('init', $plugin_admin, 'clean_output_buffer');
     }
 
     /**
