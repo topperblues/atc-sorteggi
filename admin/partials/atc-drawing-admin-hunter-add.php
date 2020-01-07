@@ -29,7 +29,28 @@ $select_tipocaccia = Lib\Views_Util::create_select('tipocaccia', Lib\Hunters_Tab
 $select_regione = Lib\Views_Util::create_select('regione', Lib\Hunters_Table::col_regione_options(), $select_attr, $hunter['regione']);
 $select_priorita = Lib\Views_Util::create_select('priorita', Lib\Hunters_Table::col_priorita_options(), $select_attr, $hunter['priorita']);
 
-?>
+if (isset($_POST['save'])) {
+    if (isset($_FILES['paallegato']['name']) && isset($_FILES['paallegato']['type'])) {
+        $_POST['paallegatonome'] = $_FILES['paallegato']['name'];
+        $_POST['paallegatotipo'] = $_FILES['paallegato']['type'];
+        $_POST['paallegato'] = file_get_contents($_FILES['paallegato']['tmp_name']);
+    } else {
+        $_POST['paallegatonome'] = $hunter['paallegatonome'];
+        $_POST['paallegatotipo'] = $hunter['paallegatotipo'];
+        $_POST['paallegato'] = $hunter['paallegato'];
+    }
+    $res = Lib\Hunters_Table::save($_POST);
+    if (!$res) {
+        echo  " <div class=\"alert alert-danger\" role=\"alert\">
+                Errore durante il salvataggio dei dati
+                </div>";
+    } else {
+        echo " <div class=\"alert alert-success\" role=\"alert\">
+                Dati salvati con successo!
+                </div>";
+    }
+} else {
+    ?>
 <div class="container-fluid mt-3">
     <div class="row border border-primary rounded">
         <div class="col-12 p-3">
@@ -166,6 +187,10 @@ $select_priorita = Lib\Views_Util::create_select('priorita', Lib\Hunters_Table::
                         <?=$select_priorita?>
                     </div>
                 </div>
+
+                <input class="form-control" name="id" type="hidden" id="id"
+                    value="<?=$hunter['id']?>" />
+
                 <button name="save" type="submit" class="btn btn-primary">Salva</button>
             </form>
         </div>
@@ -177,15 +202,5 @@ $select_priorita = Lib\Views_Util::create_select('priorita', Lib\Hunters_Table::
 
 
 
-
-
-
-
-
 <?php
-if (isset($_POST['save'])) {
-    $_POST['paallegatonome'] = $_FILES['paallegato']['name'];
-    $_POST['paallegatotipo'] = $_FILES['paallegato']['type'];
-    $_POST['paallegato'] = file_get_contents($_FILES['paallegato']['tmp_name']);
-    Lib\Hunters_Table::save($_POST);
 }

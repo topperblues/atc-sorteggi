@@ -60,7 +60,7 @@ class Hunters_List extends \WP_List_Table
      */
     public static function delete_hunter($id)
     {
-        $table = Lib\Hunters_Table::delete();
+        return Lib\Hunters_Table::delete($id);
     }
     /**
      * Returns the count of records in the database.

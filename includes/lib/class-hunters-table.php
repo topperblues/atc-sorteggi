@@ -149,7 +149,17 @@ class Hunters_Table
 
         $wp_track_table = self::get_table();
 
-        $wpdb->insert($wp_track_table, self::filter_keys($data));
+        $res = null;
+
+        if (isset($data['id']) && $data['id'] !== "") {
+            $where =array( 'id' => $data['id'] );
+            unset($data['id']);
+            $res = $wpdb->update($wp_track_table, self::filter_keys($data), $where);
+        } else {
+            unset($data['id']);
+            $res = $wpdb->insert($wp_track_table, self::filter_keys($data));
+        }
+        return $res;
     }
 
     public static function get($id)
@@ -190,7 +200,7 @@ class Hunters_Table
 
         $table = self::get_table();
 
-        $wpdb->delete(
+        return $wpdb->delete(
             "{$table}",
             [ 'id' => $id ],
             [ '%d' ]
