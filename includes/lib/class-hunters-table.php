@@ -176,6 +176,38 @@ class Hunters_Table
         return $result[0];
     }
 
+    public static function get_col_opt($col)
+    {
+        global $wpdb;
+        
+        $table = self::get_table();
+
+        $sql = "SELECT DISTINCT $col FROM {$table} order by $col asc";
+        $result = $wpdb->get_results($sql, 'ARRAY_A');
+        return $result;
+    }
+
+    private static function prepare_where($req)
+    {
+        $where = "";
+        if (isset($req['s']) && ! empty($req['s'])) {
+            $where .= " (numero LIKE '%{$req['s']}%' OR anno LIKE '%{$req['s']}%' OR nome LIKE '%{$req['s']}%' OR cf LIKE '%{$req['s']}%' OR tipocaccia LIKE '%{$req['s']}%' OR regione LIKE '%{$req['s']}%' OR priorita LIKE '%{$req['s']}%' ) ";
+        }
+        foreach ($req as $key => $value) {
+            $col = explode('-', $key);
+            if (count($col)>1 && $col[1]=='filter' && ! empty($value)) {
+                if (!empty($where)) {
+                    $where .= " AND ";
+                }
+                $where .= " {$col[0]} = '{$value}' ";
+            }
+        }
+        if (!empty($where)) {
+            $where = " WHERE ". $where;
+        }
+        return $where;
+    }
+
     public static function get_list($per_page, $page_number)
     {
         global $wpdb;
@@ -184,10 +216,7 @@ class Hunters_Table
 
         
         $sql = "SELECT * FROM {$table}";
-        if (! empty($_REQUEST['s'])) {
-            $search = $_REQUEST['s'];
-            $sql .= " WHERE (numero LIKE '%{$search}%' OR anno LIKE '%{$search}%' OR nome LIKE '%{$search}%' OR cf LIKE '%{$search}%' OR tipocaccia LIKE '%{$search}%' OR regione LIKE '%{$search}%' OR priorita LIKE '%{$search}%' )";
-        }
+        $sql .= self::prepare_where($_REQUEST);
         if (! empty($_REQUEST['orderby'])) {
             $sql .= ' ORDER BY ' . esc_sql($_REQUEST['orderby']);
             $sql .= ! empty($_REQUEST['order']) ? ' ' . esc_sql($_REQUEST['order']) : ' ASC';
@@ -195,6 +224,7 @@ class Hunters_Table
         $sql .= " LIMIT $per_page";
         $sql .= ' OFFSET ' . ($page_number - 1) * $per_page;
         $result = $wpdb->get_results($sql, 'ARRAY_A');
+        echo $sql;
         return $result;
     }
 

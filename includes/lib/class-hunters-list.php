@@ -171,6 +171,20 @@ class Hunters_List extends \WP_List_Table
         return $sortable_columns;
     }
     /**
+     * Columns to make filterable.
+     *
+     * @return array
+     */
+    public function get_filter_columns()
+    {
+        return array(
+            'anno',
+            'tipocaccia',
+            'regione',
+            'priorita'
+        );
+    }
+    /**
      * Returns an associative array containing the bulk action
      *
      * @return array
@@ -182,6 +196,35 @@ class Hunters_List extends \WP_List_Table
         ];
         return $actions;
     }
+
+    public function extra_tablenav($which)
+    {
+        $columns = $this->get_filter_columns();
+        if ($which == "top") {
+            echo "<div class=\"alignleft actions bulkactions\">";
+            foreach ($columns as $col) {
+                $rows = Lib\Hunters_Table::get_col_opt($col);
+                if ($rows) {
+                    echo "<select name=\"{$col}-filter\">
+                        <option value=\"\">Filtra per {$col}</option>";
+
+                    foreach ($rows as $row) {
+                        $selected = '';
+                        if ($_POST["{$col}-filter"] == $row[$col]) {
+                            $selected = ' selected = "selected"';
+                        }
+
+                        echo "<option value=\"{$row[$col]}\"
+                        {$selected}>{$row[$col]} </option>";
+                    }
+                    echo "</select>";
+                }
+            }
+            echo "<input type=\"submit\" name=\"filter_action\" id=\"post-query-submit\" class=\"button\" value=\"Filtra\">";
+            echo "</div>";
+        }
+    }
+
     /**
      * Handles data query and filter, sorting, and pagination.
      */

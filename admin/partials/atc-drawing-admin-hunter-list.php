@@ -31,6 +31,7 @@ $huntersList = new Lib\Hunters_List();
                     <form method="post">
                         <?php
                                 $huntersList->prepare_items();
+                                $huntersList->search_box('Cerca', 'search_id');
                                 $huntersList->display();
                         ?>
                     </form>
