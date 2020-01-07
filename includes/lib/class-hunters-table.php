@@ -184,6 +184,10 @@ class Hunters_Table
 
         
         $sql = "SELECT * FROM {$table}";
+        if (! empty($_REQUEST['s'])) {
+            $search = $_REQUEST['s'];
+            $sql .= " WHERE (numero LIKE '%{$search}%' OR anno LIKE '%{$search}%' OR nome LIKE '%{$search}%' OR cf LIKE '%{$search}%' OR tipocaccia LIKE '%{$search}%' OR regione LIKE '%{$search}%' OR priorita LIKE '%{$search}%' )";
+        }
         if (! empty($_REQUEST['orderby'])) {
             $sql .= ' ORDER BY ' . esc_sql($_REQUEST['orderby']);
             $sql .= ! empty($_REQUEST['order']) ? ' ' . esc_sql($_REQUEST['order']) : ' ASC';
